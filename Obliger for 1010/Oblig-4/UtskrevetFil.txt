@@ -1,0 +1,4 @@
+# Pasienter (navn, fnr)
+# Legemidler (navn,type,pris,virkestoff,[styrke])
+# Leger (navn,kontrollid / 0 hvis vanlig lege)
+# Resepter (legemiddelNummer,legeNavn,pasientID,type,[reit])
