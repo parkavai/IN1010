@@ -1,0 +1,3 @@
+La oss lage et program hvor hver tråd skal sette inn et tall i en array.
+Og andre tråder skal da ta ut to tall fra arrayet og adderet tallene sammen og sette det inn 
+i en objekt. 

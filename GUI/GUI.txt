@@ -1,0 +1,38 @@
+De ulike metodene for GUI:
+
+Component.setBorder(BorderFactory.createLineBorder(Color.black)): 
+Lager en ramme rundt en Component(JLaber, JButton, JPanel osv). 
+
+Component.setFont(new Font(Font.Arial(angi skrifttype), Font.Plain(endrer på selve teksten altså bold, kursiv), 10(angir størrelse)))
+
+Component.setPreferredSize(Angir hvor stor dimensjonen skal være, relevant for å lage figurer(se Sjakkbrett klassen eller dag sin presentasjon))
+
+Component.setBackground(), endre farge til bakgrunnen i en Jcomponent. 
+
+Component.setForeground(), endre farge til tekst
+
+JPanel.setLayout(Angir hvilken type layout du skal velge):
+Du har BorderLayout hvor du kan angi hvor ting skal plasseres, sjekk Oblig 7 f.eks, men 
+med BorderLayout kan du plassere ulike komponenter som du vil, BorderLayout.NORTH = komponent settes på toppen f.eks.
+Den andre er GridLayout som kan sees som et rutenett hvor du spesifiserer rader og kolonner. 
+
+JPanel.add(Legger til en gitt Component i panelet)
+
+JTextField, lager en tekstboks som bruker kan skrive inn i, har en actionListener, getText() og setText().
+
+setOpaque, Gjør det slik at ting i bakgrunnen blir synlig, hvis du har en tekst inne i en hvitRute, så blir den synlig. 
+
+JComponent.paintComponent(Graphics g): Blir brukt for å tegne figurer som sirkler, firkanter osv. 
+Oversikt over relevante metoder for paintComponent: 
+void drawLine (int x1, int y1, int x2, int y2)
+void drawOval (int x, int y, int width, int height);
+void drawPolygon (int[] x, int[] y, int n)
+void drawRect (int x, int y, int width, int height)
+void drawString (String s, int x, int y)
+void fillOval (int x, int y, int width, int height);
+void fillPolygon (int[] x, int[] y, int n)
+void fillRect (int x, int y, int width, int height)
+void setColor (Color c)
+void setStroke (Stroke s)
+
+

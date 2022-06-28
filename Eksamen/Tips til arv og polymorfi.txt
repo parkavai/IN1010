@@ -1,0 +1,11 @@
+Arv og polymorfi
+
+Anvend pekere og polymorfi:
+Si at vi har en superklasse med en subklasse som arver og overskriver noen metoder av superklassene.
+Da har vi virituelle metoder gjennom definisjonen av hva en virituell metode er og kan da anvende polymorfi.
+I eksamen så kan det forekomme spørsmål hvor de tester om du har forstått dette med polymorfi og arv. For eksempel, 
+så bør du alltid forutse å bruke polymorfi hvis du skal sjekke om pekeren til en superklasse, er en instanceOf 
+subklasse, for så å typekonvertere til subklassen for å anvende en virituell metode. Problematikken her er at det er 
+unødvendig å gjøre, fordi hvis vi har en superklasse peker som peker på en subklasse, så trenger vi kun å utføre 
+den virituelle metoden og da slipper vi å typekonvertere objektet siden ved polymorfi så er det den dypest sett metoden 
+som utføres.  

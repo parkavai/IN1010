@@ -1,0 +1,46 @@
+Lenkeliste
+En lenkeliste er en form for datastruktur hvor vi benytter av en indre klasse Node 
+som bevarer oppbevarer et generisk data fra en gitt generisk objekt. Dette kan 
+være en string, (må castes hvis det er av int), eller en objekt. Og for å lage denne 
+listen, så bruker vi da nodene og dets pekere til å holde denne listen sammen. 
+Derfor kalles den en lenkeliste siden vi lenker sammen nodene via pekerne til en node. 
+
+EnveisListe
+En lenkeliste hvor vi har kun en startnode vi jobber oss fra og utvider listen ved å 
+sette startnode sin peker til å peke på de neste objektene som legges til. Problemet 
+ved en slik liste er at, om vi har en FIFO format, så vil det ta lengre tid å hente 
+det siste elementet gjennom løkker. Dermed kan toveislister være nødvendig.
+
+ToveisLise 
+En lenkeliste hvor har både en start og slutt node. Dette gjør det mulig for å hente 
+sluttnoden enklere fremfor å benytte av while-løkker for å traversere gjennom 
+lenkelisten. 
+
+FIFO
+En "First in first out" liste fungerer slik at den vi legger til først i lenkelisten, 
+blir fjernet sist ut av listen. 
+
+LIFO 
+En "Last in first out" liste fungerer slik at den vi legger til i lenkelisten, blir 
+den vi fjerner ut samtidig. Dette er nyttig for stabler da stabler fungerer slik 
+at den første som legges til er den som fjernes skulle vi kalle remove samtidig. 
+
+Prioritetskø
+En "Prioritetskø" er en type liste hvor vi legger til elementer etter høyest prioritet. 
+Dette kan være om dataen til en gitt node har det laveste tallet og skal da stå helt foran 
+i listen vår. Mens de med høyere tall plasseres bakover i listen. Ved å implementere interface 
+Comparable, så kan vi lage en prioritetskø. Det Comparable gjør er å sammenligne verdiene til 
+gitte objekter også er det opp til oss å velge hvilket objekt vi skal prioritere. 
+
+• < 0 hvis vårt objekt er mindre enn det andre
+• = 0 hvis vårt objekt er likt med det andre
+• > 0 hvis vårt objekt er større enn det andre
+
+Iterator
+Et interface som en beholder klasse som en lenkeliste, implementerer. Iterator sørger for at 
+vi kan traversere gjennom elementene i en liste fra start til slutt og har metodene "next()" og
+"hasNext()". Hensikten med denne er å kunne benytte av for-each løkker på en beholder. Vi lager 
+et iterator-objekt som gjør det mulig å traversere gjennom beholderen. Den trenger en int posisjon
+siden vi da vet hvor i listen vi befinner oss i og en referanse til beholderen vi skal iterere gjennom.
+For å vite hvordan du lager en iterator klasse, sjekk lenkelisten i oblig 4 eller 3. 
+ 

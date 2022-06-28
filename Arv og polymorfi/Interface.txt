@@ -1,0 +1,23 @@
+Interface 
+Et interface kan sees som en abstrakt klasse som kun inneholder metoder uten implementasjon. Hensikten med 
+interface er at klasser som implementerer et slikt interface, vil få tilgang til det interfacet sine metoder. 
+Dette kan være nyttig hvis en eller flere klasser skal ha egenskaper som de arver fra en felles kilde hvor 
+kilden er da interface i dette tilfellet. Et eksempel kan være at vi har en interface av Utøver som har en metode 
+Sport. Det er mange sportsutøvere i denne verdenen som kan spille rollen som utøver. Fotballspillere, svømmere, 
+basketballspillere, skiutøvere, osv. Gjennom de klassene som ble listet, så kan hver og en av de klassene implementere 
+interfacet (utøver) og har da sin egen implementasjon av den metoden. En fotballspiller vil bli klassifisert som en 
+"fotballspiller" i sin utøver metode imens en skiutøver vil bli sett på som en "skiutøver". Et interface er altså 
+polymorf kan man si med andre ord. 
+
+Interface pekere: (sjekk link hvis du har glemt det, tid 32.00 (https://www.uio.no/studier/emner/matnat/ifi/IN1010/v21/forelesningsvideoer/IN1010-uke5-time2.mp4?vrtx=view-as-webpage))
+Når vi lager en interface peker, så er vi da ute etter de interface egenskapene som selve interface har. 
+Si at vi har en Interface med navnet Skattbar som klassene Bil og Taxi arver. Når vi lager en Interface peker 
+av Skattbar, så kan vi gjøre følgende: 
+
+Skattbar skatt = new Bil();
+
+Det som skjer er følgende; Nå vil vi få tilgang til Bil-klassen sin versjon av Skattbar metoden. Og det er kun 
+denne versjonen/egenskapen som (skatt) får tilgang til. (skatt) får altså ikke tilgang til de andre metodene som 
+Bil-klassen har, eller instansvariabler som for eksempel merke, modell, pris også videre. Den får altså kun tilgang 
+til informasjonen i Bil-klassen sin skattbar metode og hva som skrives ut der. 
+

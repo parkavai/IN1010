@@ -1,0 +1,20 @@
+Hva er polymorfi?
+Når vi har en subklasse som skal deklarere en metode med samme signatur som en metode i superklassen,
+men med ulikt innhold, så har vi det som kalles for en virituell metode. Den nye metoden deklarert i 
+subklassen vil da endre på innholdet og tilpasse slik den klassen vil at den virituelle metoden skal 
+operere. Dette kalles for polymorfi. 
+
+Hvorfor er det nyttig?
+Gjennom polymorfi så kan vi anvende referanse-pekere til å gjenbruke kode og gjøre jobben vår enklere, 
+spesielt hvis vi har med abstrakte klasser å gjøre. Årsaken er da at, husk oblig 6 da vi hadde rute objekter. 
+Når vi kalte gaa() fra en rute, så kaller vi ikke gå fra (Rute)-klassen. Men heller (Hvit-rute) eller (Aapning) 
+rutene som vi skulle kjøre gaa() fra. Dette skyldes av polymorfi siden Rute-klassen peker til en (Hvit-rute) eller 
+(Aapning-rute) og vil da eksekvere deres gaa() metode siden metoden er virituell. Kaller vi en virituell metode fra 
+en superklasse-peker med instans av en superklasse, så er det superklassen sin metode som blir eksekvert. I oblig-eksempelet
+så ville dette vært (Rute-klassen) om vi kunne lage en instans av (Rute) og kjøre gaa() metoden der. Men hvis superklasse-
+pekeren peker på en subklasse-objekt, så er det subklasse-objektet sin versjon av metoden som eksekveres. Hvis dette er 
+forvirrende så se (testPekere) klassen og utfør noen tester for å skjønne dette. Men tankegangen er dette med arv og briller. 
+Om vi lager en superklasse-peker med instans av superklassen, så har vi kun tilgang til superklassepekeren sine metoder 
+og variabler da vi befinner oss i superklasse-"brillene". Men om superklassepekeren peker på en subklasse, så har vi kun 
+tilgang til superklasse-pekeren sine metoder og variable, med mindre noen av metodene er virituelle, for da vil subklasse
+metodene som er overskrevet, bli utført.  

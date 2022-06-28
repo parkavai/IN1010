@@ -1,0 +1,342 @@
+Tråder i java:
+
+For å kunne lage en tråd, må vi huske å implementere interfacet Run. 
+
+interface Runnable {
+void run( );
+}
+
+Klassen Thread ser grovt sett slik ut:
+    public class Thread {
+    public Thread (Runnable r) { . . . }
+    public void start ( ) { . . . }
+}
+
+Når vi lager en instans av en tråd, så må vi ha noe kode som den tråden skal eksekvere. 
+Dette er gjennom interfacet Run at vi utfører den prosessen som tråden skal gjennomføre. 
+Nå kan vi se på fremgangsmåten for å lage en tråd og starte den:
+
+Vi lager en klasse som skal implementere interfacet runnable
+
+class GreetingRunnable implements Runnable{
+
+    //Også har vi en eller en annen kode som denne skal eksekvere
+
+    private static final int Repetisjoner = 10;
+    private static final int delay = 1000;
+
+    public String hilsen;
+
+     public GreetingRunnable(String aGreeting)
+        {
+            greeting = aGreeting;
+        }
+
+        // Selve metoden som interfacet Runnable har, denne eksekverer den koden vi vil utføre
+        public void run()
+        {
+            try
+            {
+                for (int i = 1; i <= REPETITIONS; i++)
+                {
+                    Date now = new Date();
+                    System.out.println(now + " " + greeting);
+                    Thread.sleep(DELAY);
+                }
+        }
+            catch (InterruptedException exception)
+            {
+                System.out.println("Fanget exceptions");
+            }
+        }
+
+}
+
+
+class testeMinRun {
+    public class GreetingThreadRunner {
+        
+        public static void main(String[] args)
+        {
+        // Først må vi lage en instans av klassen som implementerer runnable
+            GreetingRunnable r1 = new GreetingRunnable("Hello");
+            GreetingRunnable r2 = new GreetingRunnable("Goodbye");
+        // Nå kan vi lage instanser av tråder som skal ha en peker av runnable instansen
+            Thread t1 = new Thread(r1);
+            Thread t2 = new Thread(r2);
+        // Nå eksekverer vi tråden sin javaprogram gjennom start(). 
+            t1.start();
+            t2.start();
+        }
+}
+
+}
+
+I dette programmet så har vi lagd to tråder som skal kjøre sin kode. Og dette har vi lov til siden 
+tråder kan kjøre i parallell. De kjøres i ekte parallell som vil si at trådene utfører hver sitt 
+program på samme tidspunkt. Det vil være noe forskjell i tid da de utføres siden trådene ikke nødvendigvis
+utføres i riktig rekkefølge. Det er bare slik det er at tråd eksekveringskontrollen for tråder eksekverer dem
+noen ganger i forskjellig rekkefølge. 
+
+Det finns ulike metoder som tråder kan ha og disse skal skrives under:
+
+Sleep
+Denne metoden sørger for at tråden er satt i hvile i et antall millisekunder. Hensikten med denne metoden 
+er å la tråd eksekveringskontrollen få muligheten til å la andre tråder få eksekvere sin run metode mens den 
+foreløpige er i hvile. Si at vi har følgende tråd (t1). Denne tråden er satt i hvile altså (t1.sleep(1000)) og 
+den vil da sove i ett sekund siden vi regner utifra millisekunder. Dermed kan andre tråder som t2 eller t3, 
+utføre sin run() metode. Hvis noen prøver å avbryte denne tråden mens den sover, så vil det skje et unntak 
+som vi må håndtere. Årsaken er at tråden vil våkne opp til en InterruptedException som hindrer at vi får 
+avbrytt den tråden vi skal avbryte.
+
+try {
+    Thread.sleep(1000) // sover i et sekund
+}
+
+catch (InterruptedException e) {
+    // behandler exception
+}
+
+Interrupt
+Denne metoden sørger for at tråden avbrytes i den forstand at dets run metode vil avbryte. Det som skjer at 
+tråden vil kaste ut en InterruptedException for selve tråden som indikerer at tråden er avbrytt. Så er det bare 
+å håndtere exceptionen for selve tråden. 
+
+Join
+Denne metoden sørger for at en tråd er satt på vent i et gitt antall sekunder inntil en annen tråd er terminert. 
+Si vi har en tråd1 som eksekverer sin run metode og er i ferd med å terminere. Tråd2 er satt på vent i et gitt 
+sekunder inntill tråd1 er blitt terminert. Så join er en metode som kan være nyttig for å sjekke om en tråd er 
+blitt terminert. Den har også samme problem som sleep at du ikke kan forvente at en tråd er satt på vent i de 
+angitte sekundene da OS og tråd eksekveringskontrollen ikke er så presise med hvor mange sekunder du har angitt. 
+Er det 4 sekunder, så kan det egentlig være 3 eller 5 avhengig av OS som benyttes. 
+
+Callstack
+Tråder har en såkalt stack for når de skal eksevere metoder innad i tråd-objektet. Først en callStack fungerer 
+slik at når vi kaller på ulike metoder, så vil det være en beholder for rekkefølgen av eksekvering til de ulike 
+metodene. De utføres da i rekkefølge i formen av en stack altså (first in, last out). Så når vi har et tråd-objekt 
+som eksekverer en annen metode(metode1) i run-metoden og metode1 utfører en annen metode(metode2), så vil de følge 
+denne callStacken. I dette tilfellet vil callstacken gå fra metode2 til metode1 til metoden i tråden. Tråder sin 
+callstack fungerer altså slikt og kan være nyttig å vite når man skal implementere metoder og forstå rekkefølgen 
+av eksekveringen. 
+
+Felles data
+Når tråder skal benytte seg av felles data, kan det skje problemer hvis vi ikke fikser dem på forhånd. Når 
+tråder skal aksesseres av felles data, så er det kun en tråd av gangen som kan aksessere dataen. Problemet 
+ligger i at tråden ikke fungerer slik da de kjøres i parallellitet. På grunn av parallellitet, så vil 
+jo trådene aksessere den felles dataen samtidig og utføre endringene. Og det er her selve problemet ligger 
+siden den felles dataen kan bli endret slik at brukeren ikke fikk oppnådd det brukeren ville gjøre med felles 
+dataen. Hvis to tråder skal benyttes for å gjøre om tallet 2 til tallet 5 også tilbake til 2 så er det ikke 
+sikkert at den ene tråden utfører sin eksekveringsmetode for å omgjøre tallet 2 til tallet 5. Det er her 
+kritiske regioner kommer inn og skal løse dette problemet 
+
+Synchronized
+Noen ganger har vi behov for å synkronisere to eller flere tråder. Det vil si at vil vi sikre oss at en tråd 
+er ferdig med en oppgave før neste tråd begynner. Dette gjelder om flere tråder skal aksessere på felles data. 
+Vi vet allerede problemet ved at flere tråder skal aksessere på felles data som er at dataen kan tulles med 
+tanke på at trådene ikke kjøres i bestemt rekkefølge (med mindre vi implementerer de rette metodene selvfølgelig).
+Hvis vi foran en metode skriver Java-ordet "Synchronized". vil alle synkroniserte metoder i den klassen sperres og 
+alle tråder som senere prøver å bruke en slik metode, må vente inntil den tråden som holder på en av de synkroniserte 
+metodene er ferdig. 
+
+Kritiske regioner/Monitorer
+En kritisk region er en kodebit som utføres ferdig før en annen tråd får lov til å utføre en kritisk region 
+(med hensyn på de samme dataene). Maks en tråd eier dataene. En kritisk region sørger for at en tråd kan aksessere 
+den felles dataen kun en av gangen. Dermed blir parallelliteten brutt og den felles dataen vil dermed forhindre 
+det scenarioet vi nevnte tidligere med at dataendringen blir klusset med siden trådene kjøres i parallellitet. 
+Man kan se på en kritisk region som en lås hvor eieren (tråden), kan aksessere dataen og ingen andre eiere få lov til å gjøre det. 
+Når eieren er ferdig med å aksessere dataen, så vil låsen låses opp for de andre eierne som er satt på vent, kan nå aksessere dataen 
+Se på eksempelet under til å forstå det bedre:
+
+int penger = 2000; // Felles data
+
+void ta(int ant){
+    int x;
+    <lås>
+    x = penger;
+    x -= ant;
+    penger = x;
+    <lås opp>
+}
+
+void gi(int ant){
+    int x;
+    <lås>
+    x = penger;
+    x += ant;
+    penger = x;
+    <lås opp>
+}
+
+Det som skjer her er følgende: Vi har to tråder som skal aksessere felles dataen "penger" hvor den ene tråden 
+skal ta pengene og subtrahere dem med et antall og en metode gi som skal ta pengene og addere den med et gitt 
+antall. Vi sier at tråd1 skal benytte at void ta() og tråd2 skal anvende void gi(). Gjennom kritisk region så 
+vil da tråd1, den vil først låse metoden og da den er ferdig, vil den låse opp selve låsen. Først da får tråd2 
+lov til å anvende gi() metoden og samme prosedyre foregår igjen med låsingen og aksessere felles dataen. 
+Med Monitorer/kritiske regioner så vil brukeren sørge for å begrense trådenes mulighet til å tukle med 
+felles dataen. Brukeren vil sørge for at felles dataen blir brukt på en strukturert og god måte at det blir lettere 
+å spore hvilken tråd som anvender av felles dataen. Så når du skal jobbe med tråder som skal benytte seg av felles data, 
+husk å bruke monitorer!!! 
+
+import java.concurrent.locks.*
+
+Lock laas = new ReentrantLock();
+
+int penger = 2000; // Felles data
+
+void ta(int ant){
+    int x;
+    laas.lock()
+    x = penger;
+    x -= ant;
+    penger = x;
+    laas.unlock()
+}
+
+void gi(int ant){
+    int x;
+    laas.lock()
+    x = penger;
+    x += ant;
+    penger = x;
+    laas.unlock()
+}
+
+Volatile
+Volatile brukes for at en gitt variabel som trådene skal benytte av, ikke lagres i 
+enhver tråd sin lokale minnet. Konsekvensen ved å ikke ha volatile er at andre tråder 
+kan utføre endringer for en gitt variable som de andre trådene bør få informasjon 
+om og anvende til deres nytte. 
+
+void await()
+En metode som sørger for at en tråd blir satt til vent i en kø siden den oppfyller en betingelse (bufferet var tom),
+Den må derfor vente inntill den er blitt signalisert for å kunne gå ut av køen. 
+
+void signal()
+En metode som sørger for å våkne opp en tråd som er satt på await(). Meget viktig å bruke for at tråden skal gå ut 
+køen og få utføre sin eksekveringsmetode 
+
+void signalAll()
+Samme som nevnt over bare at den våkner opp alle trådene istedenfor. 
+
+Typisk eksempel på monitorer(Produsent og konsument)
+Vi skal se på et typisk eksempel på en monitor for å forstå sammenhengen mellom monitorer og tråder bedre.
+Et typisk eksempel på en monitor er en buffer, som vanligvis har metoder som settInn() altså setter inn data 
+og taUt() altså ta ut data. For denne bufferen så har vi to gruppe tråder som skal benytte seg av denne monitoren.
+Vi har produsenter på den ene siden som er ansvarlig for å produsere dataen som monitoren skal ta inn altså har 
+ansvar for settInn() metoden. Også har vi konsumenter som er ansvarlige for taUt() metoden. Merk at monitorer 
+består av felles data som produsent og konsument jobber med, derfor må vi sørge for at dataen ikke blir klusset 
+med ved å implementere de metodene som monitoren skal ha kontroll over dataen. Dette gjøres gjennom låse-objektet 
+som vi har lært av tidligere med dets lock() og unlock() metoder. 
+
+Grunnen til at ikke én produsent sender data videre til én bestemt konsument er at tiden 
+det tar å produsere og tiden det tar å konsumerer kan variere. Vi vil derfor at produsentene 
+og konsumentene eksekverer mest mulig asynkront. Det får vi til ved at data mellomlagres i et buffer. 
+Da kan både produsenter og konsumenter jobbe på full fart, uten at en konsument må vente på en bestemt 
+produsent. Hvilken betydning dette har er for tilfeller hvor bufferet/monitoren er tomt som vi skal se på nå 
+
+Når bufferet er tomt kan en konsument ikke hente ut data fra bufferet, og når bufferet er fullt
+er det ikke mulig å legge noe mer inn. Men slike tilstander vil (forhåpentligvis) ikke vare
+lenge. Når bufferet er tomt må en konsument vent på å hente noe ut til en produsent har lagt
+noe inn, og når bufferet er fullt må en produsent vente på å legge noe inn til en konsument
+har hentet noe ut.
+
+Aktiv venting (Se Stein sin notat skulle dette være uforståelig) https://www.uio.no/studier/emner/matnat/ifi/IN1010/v21/notater/trader-8mars.pdf
+En måte å løse dette på kalles aktiv venting. I figur 4 ser vi hva som da skjer. Når en tråd
+kommer inn i monitoren og finner at bufferet er tom eller full, skjønner den at her er det ikke 
+noe å gjøre, og returnerer umiddelbart med uforrettet sak. Returverdien fra metoden sier noe om
+resultatet var vellykket eller ikke og som vi ser sjekkes dette i while-testen. Om kallet ikke
+var vellykket gjøres det på nytt, med håp om at nå har sitasjonen i monitoren forandret seg til
+det bedre for denne tråden.
+
+Det å gå i en løkke på denne måten og stadig sjekke om resultatet nå er blitt vellykket kalles
+aktiv venting. Aktiv venting kan være svært fornuftig hvis ventingen er kort og tråden bare
+behøver å teste noen få ganger. Men ellers bruker aktiv venting prosessor-ressurser som
+ellers kanskje kunne vært brukt til noe annet. Og hvis flere venter aktivt på en ressurs, slik
+som vi har sett her, så vil det være helt tilfeldig hvem som til slutt får den.
+
+Passiv venting 
+Ved passiv venting så vil trådene bli plassert i et køsystem der hver tråd må vente til de kan anvende 
+metodene som bufferet tilbyr for å endre på felles dataen. For å komme inn i en monitor-metode må tråden 
+utføre laas.lock(); og hvis låsen er lukket (døren er låst) fordi det allerede er en annen tråd inne i
+monitoren, må tråden vente, og den venter passivt i en kø. For hvert objekt av en klasse som
+implementerer interfacet Lock er det en kø av tråder som venter på å slippe gjennom låsen.
+Når en tråd går ut av monitoren (avslutter en monitor-metode) utfører den laas.unlock(); Da 
+må lås-objektet (objektet som laas peker på) sjekke om det ligger noen tråder i kø for å slippe
+inn i monitoren. Gjør den det, må en av trådene som venter, startes opp og slippes inn i
+monitoren. Samtidig låses låsen igjen på nytt. Denne køen av tråder som venter på å slippe
+inn i monitoren bør være rettferdig (FIFO – First Inn First Out). For å oppsummere så er det kun en tråd av 
+gangen som for lov til å benytte seg av bufferet. De andre må vente derimot etter at det er klart. 
+
+Men egentlig er vi nå på jakt etter en måte å slippe å vente aktivt når settInn() kalles og
+bufferet er fullt, og når taUt() kalles og bufferet er tomt. Fordi en konsument tråd kan ikke ta 
+ut noe når bufferet er tomt eller at en produsent tråd kan sette inn noe når bufferet er fullt 
+Figur 5 viser hvordan dette kan løses. Når en tråd starter å utføre en metode, men finner at metodens 
+hensikt ikke kan oppnås, så legger tråden seg til å vente inne i metoden, istedenfor å returnere med uforrettet
+sak. Si hvis vi har for tilfelle hvor bufferet er tomt, da vil konsument tråden i settInn() bli satt i køen. 
+I det tråden starter å vente gir den også fra seg låsen, slik at en annen tråd kan slippe inn i monitoren.
+
+Legg merke til at inne i de to metodene er det to forskjellige betingelser å vente på. Metoden
+settInn() må eventuelt vente på at bufferet ikke lenger er fullt (ikkeFull.await()), mens
+metoden taUt() må vente på at det ikke er tomt (ikkeTom.await()).
+
+I figur 5 har vi følgelig tre køer av tråder som venter: En kø for de som ønsker å slippe inn i
+monitoren (inn i en monitor-metode, laas.lock()), og en kø for hver av de to betingelsene som
+det ventes på. Hver kø administreres av et vente- og kø-objekt som refereres av henholdsvis
+laas, ikkeFull og ikkeTom. Disse tre køene må samarbeide, derfor administreres de to køene
+for vente-betingelsene (engelsk: condition) av objekter som er laget av det første låseobjektet: 
+Condition ikkeFull = laas.newCondition(); og Condition ikkeTom = laas.newCondition(); (se figur 6).
+
+I figur 2 så vi at når en tråd sover kan den bli avbrutt. Da skjer et InterruptedException som
+må kunne fanges opp av programmet. Også når en tråd venter i <condition>.await(); kan det 
+hende at tråden blir avbrutt, og dette må også kunne fanges opp. En kall på await() må derfor
+alltid ligge inne i en try-catch blokk, og dette har vi ikke vist på figurene her.
+
+Signalering 
+De trådene som venter i køen for å komme inn i monitoren (inn i en monitor-metode) kan
+slippe til enten når en tråd er ferdig i monitoren (laas.unlock()) eller når en tråd må vente på
+en betingelse (await()). Men hvem skal starte opp de trådene som venter på en betingelse?
+Svaret er at det må programmereren selv sørge for at programmet gjør, og det gjøres med et
+kall til en av metodene signal() eller signalAll(), som begge er instansmetoder i Conditionobjekter. 
+
+For å oppsummere så har vi til nå lært om passiv venting og hvordan det blir lagt køer for hver eneste lås metode 
+så må vi sørge for at trådene i hver kø, for muligheten til å utføre det de skal. Altså at en konsument tråd kan 
+få lov til å hente ut data fra bufferet ettersom en produsent tråd utførte sin settInn() metode og la til 
+data inn i bufferet. Dette gjøres gjennom signalisering.
+
+Når en tråd har tatt ut et element av bufferet i metoden taUt() så er det klart at om bufferet var
+fullt på forhånd, så er det ikke lenger fullt. Hvis en tråd da lå og ventet i metoden settInn(),
+så er det nå blitt plass til å sette inn et element. For sikkerhets skyld er det derfor alltid lurt å
+signalere at bufferet ikke er fullt lenger i det metoden taUt() terminerer. Slik signalering
+gjøres med ikkeFull.signal();. Dette vil føre til at hvis en tråd ligger og venter i ikkeFull.await(); 
+så vil den overta monitoren og låsen etter at taUt() er terminerer. Den tråden som tar over får fortsette 
+å eksekvere videre etter ikkeFull.await(); På akkurat samme måte må settInn-metoden utføre ikkeTom.signal() 
+når den terminerer. Da er bufferet helt sikkert ikke lenger tomt, og det er mulig for en tråd som venter i
+ikkeTom.await() å fortsette å eksekvere. Bufferet gir altså tillatelse for de trådene som venter i køen, til 
+å få lov til å benytte seg av låsen for monitoren. Trådene blir altså prioritert når de betingelsene stemmer. 
+
+Ting å vite om monitorer 
+En monitor er et vanlig objekt som flere tråder har referanser til og som disse trådene derfor kan kalle metoder i.
+En monitor er ofte en beholder for å utveksling av felles data mellom tråder (produsenter og konsumenter). 
+Låsing og opplåsing foregår kun ved monitorer altså innad monitor-objektets metoder. 
+Venting (await()) og signalering(signal(), signalAll()) foregås kun ved monitorer-metoder. 
+For å oppsummere så bør du huske at all form for venting, signal og låsing foregår i monitoren, ikke i trådene!!!
+
+Barriere 
+Ikke alle beregniner kan løses greit eller effektivt med synkroniserte metoder. Mange beregninger kan parallelliseres 
+ved at man deler dem opp i flere trinn. Hvert trinn gjøres i parallell av et antall tråder, men vi vet at alle trådene 
+skal bli ferdig med ett trinn før de iverksetter det andre trinnet. Da kan det være greit med en sjekk som bekrefter 
+at alle trådene er ferdig med første trinn av programmet. Da bruker vi noe som kalles en "Barriere" som kan sees som 
+en slags "Checkpoint", "Checkpoint" i den forstand at vi bekrefter at alle trådene er ferdig med første del. Og 
+hvis vi bruker "Barrieren" for alle trinn, da kan main-tråden skrive ut det endelige resultatet for brukeren siden 
+alle trådene er ferdig eksekvert. For å få til en slik ventemekanisme for et antall tråder, lager vi et objekt av 
+klassen "CyclicBarrier" og parameteren er antallet tråder som den skal stille i kø. Når den siste melder seg, skal 
+alle trådene igjen slippes løs. Altså si vi har at halvparten av trådene er ferdig eksekvert, disse trådene settes 
+på kø og venter inntil den andre halvparten er ferdig med å eksekvere. Når den siste tråden er ferdig eksekvert, 
+så vil alle trådene som er satt i denne køen, bli sluppet løs. 
+
+
+Tips:
+Det er viktig at man unngår at tråder deler de samme instansvariable på grunn av den eksekveringskontrollen 
+nevnt over. Man vet altså ikke i hvilken rekkefølge trådene kan eksekvere og dermed blir det vanskelig å spore
+feilen som oppstod i en spesifikk tråd som deler de samme egenskapene som en annen. Med mindre man bruker låser 
+for da hindrer vi denne feilen eller benytter av en monitor. 
